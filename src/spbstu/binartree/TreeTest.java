@@ -28,7 +28,7 @@ public class TreeTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void addDublicat() {
+    public void addDuplicate() {
         test.Add(1);
         test.Add(1);
     }
@@ -53,4 +53,14 @@ public class TreeTest {
         assertEquals(test.getNode(8, 2).value, 6);
     }
 
+    @Test
+    public void removeThd() {
+        test.Add(8); //root
+        test.Add(10); //right subtree
+        test.Add(new int[]{5, 2, 7, 6}); // left subtree
+        assertEquals("2 5 6 7 8 10", test.toString());
+        assertEquals(test.getNode(8, 2).value, 5);
+        test.Remove(5);
+        assertEquals(test.getNode(8, 2).value, 6);
+    }
 }
