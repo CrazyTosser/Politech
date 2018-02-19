@@ -5,6 +5,10 @@ import java.util.NoSuchElementException;
 public class Tree {
     private Node root;
 
+    public Tree() {
+        this.root = null;
+    }
+
     /**
      * @param KeyRoot initial value for root node of new tree
      */
@@ -12,8 +16,31 @@ public class Tree {
         this.root = new Node(KeyRoot, null);
     }
 
-    Tree() {
-        this.root = null;
+    public static String printTree(Node node) {
+        StringBuilder str = new StringBuilder();
+        if (node.init) {
+            if (node.parent == null) {
+                str.append(String.format("ROOT:%d\n", node.value));
+            } else {
+                if (node.parent.left == node) {
+                    str.append(String.format("Left for %d --> %d",
+                            node.parent.value, node.value));
+                }
+                if (node.parent.right == node) {
+                    str.append(String.format("Right for %d --> %d",
+                            node.parent.value, node.value));
+                }
+            }
+            if (node.left.init)
+                str.append(printTree(node.left));
+            if (node.right.init)
+                str.append(printTree(node.right));
+        }
+        return str.toString();
+    }
+
+    public Node getRoot() {
+        return root;
     }
 
     /**
@@ -21,16 +48,16 @@ public class Tree {
      * @param key search key
      * @return node with the search key
      */
-    private Node Search(Node cur, int key) {
+    private Node search(Node cur, int key) {
         if (cur == null || key == cur.value)
             return cur;
         if (key < cur.value)
-            return Search(cur.left, key);
+            return search(cur.left, key);
         else
-            return Search(cur.right, key);
+            return search(cur.right, key);
     }
 
-    public void Add(int key) {
+    public void add(int key) {
         Node x = root, y = null;
         while (x != null) {
             if (key == x.value)
@@ -54,17 +81,17 @@ public class Tree {
         }
     }
 
-    public void Add(int[] keys) {
+    public void add(int[] keys) {
         for (int k : keys) {
-            this.Add(k);
+            this.add(k);
         }
     }
 
     /**
      * @param key that must be removed
      */
-    public void Remove(int key) {
-        Node cur = Search(root, key), parent = cur.parent;
+    public void remove(int key) {
+        Node cur = search(root, key), parent = cur.parent;
         if (cur == null) return;
         //First variant. Cur have only left subnode
         if (cur.right == null) {
@@ -108,41 +135,48 @@ public class Tree {
     }
 
     public Node getNode(int key) {
-        return getNode(key, 0);
+        return getNode(key, Searchmode.Node);
     }
 
     /**
      * @param key  key of searching node
-     * @param mode 0 - get node, 1 - get parent
-     *             2 - get left subnode, 3 - get right subnode
+     * @param mode Node - get node, Parent - get parent
+     *             Left - get left subnode, Right - get right subnode
      * @return searched node
      */
-    public Node getNode(int key, int mode) {
-        Node res = Search(root, key);
+    public Node getNode(int key, Searchmode mode) {
+        Node res = search(root, key);
         if (res == null)
             throw new NoSuchElementException("This key not found or have not parent ");
         switch (mode) {
-            case 0:
+            case Node:
                 return res;
-            case 1:
-                return res.parent;
-            case 2:
-                return res.left;
+            case Parent:
+                return res.parent != null ? res.parent : new Node();
+            case Left:
+                return res.left != null ? res.left : new Node();
             default:
-                return res.right;
+                return res.right != null ? res.right : new Node();
         }
     }
 
+    enum Searchmode {Node, Parent, Left, Right}
+
     static class Node {
-        int value;
-        Node parent;
-        Node left, right;
+        public int value;
+        public boolean init;
+        private Node parent;
+        private Node left, right;
 
         Node(int value, Node p) {
             this.value = value;
             this.parent = p;
             right = null;
             left = null;
+            init = true;
+        }
+
+        Node() {
         }
     }
 }
