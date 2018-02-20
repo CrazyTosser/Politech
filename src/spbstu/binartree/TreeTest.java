@@ -20,6 +20,10 @@ public class TreeTest {
         test.add(1);
         test.add(9);
         assertEquals("1 5 9", test.toString());
+        assertEquals(Tree.printTree(test.getRoot()),
+                "ROOT:5\n" +
+                        "Left for 5 --> 1\n" +
+                        "Right for 5 --> 9\n");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -34,9 +38,18 @@ public class TreeTest {
         test = new Tree(8); //root
         test.add(10); //right subtree
         test.add(new int[]{5, 2}); // left subtree
+        assertEquals(Tree.printTree(test.getRoot()),
+                "ROOT:8\n" +
+                        "Left for 8 --> 5\n" +
+                        "Left for 5 --> 2\n" +
+                        "Right for 8 --> 10\n");
         test.remove(5);
         assertEquals("2 8 10", test.toString());
         assertEquals(test.getNode(8, Tree.Searchmode.Left).value, 2);
+        assertEquals(Tree.printTree(test.getRoot()),
+                "ROOT:8\n" +
+                        "Left for 8 --> 2\n" +
+                        "Right for 8 --> 10\n");
     }
 
     @Test
@@ -46,7 +59,12 @@ public class TreeTest {
         test.add(new int[]{5, 2, 6, 7}); // left subtree
         test.remove(5);
         assertEquals("2 6 7 8 10", test.toString());
-        assertEquals(test.getNode(6).value, 6);
+        assertEquals(test.getNode(8, Tree.Searchmode.Left).value, 6);
+        assertEquals(Tree.printTree(test.getRoot()), "ROOT:8\n" +
+                "Left for 8 --> 6\n" +
+                "Left for 6 --> 2\n" +
+                "Right for 6 --> 7\n" +
+                "Right for 8 --> 10\n");
     }
 
     @Test
@@ -59,5 +77,6 @@ public class TreeTest {
         test.remove(5);
         assertEquals(test.getNode(8, Tree.Searchmode.Left).value, 6);
         assertFalse(test.getNode(6, Tree.Searchmode.Left).init);
+        System.out.println(Tree.printTree(test.getRoot()));
     }
 }

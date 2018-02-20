@@ -23,17 +23,17 @@ public class Tree {
                 str.append(String.format("ROOT:%d\n", node.value));
             } else {
                 if (node.parent.left == node) {
-                    str.append(String.format("Left for %d --> %d",
+                    str.append(String.format("Left for %d --> %d\n",
                             node.parent.value, node.value));
                 }
                 if (node.parent.right == node) {
-                    str.append(String.format("Right for %d --> %d",
+                    str.append(String.format("Right for %d --> %d\n",
                             node.parent.value, node.value));
                 }
             }
-            if (node.left.init)
+            if (node.left != null)
                 str.append(printTree(node.left));
-            if (node.right.init)
+            if (node.right != null)
                 str.append(printTree(node.right));
         }
         return str.toString();
@@ -92,7 +92,6 @@ public class Tree {
      */
     public void remove(int key) {
         Node cur = search(root, key), parent = cur.parent;
-        if (cur == null) return;
         //First variant. Cur have only left subnode
         if (cur.right == null) {
             if (parent == null) {
@@ -100,8 +99,10 @@ public class Tree {
             } else {
                 if (parent.left == cur) {
                     parent.left = cur.left;
+                    parent.left.parent = parent;
                 } else {
                     parent.right = cur.left;
+                    parent.right.parent = parent;
                 }
             }
         } else {
@@ -113,8 +114,10 @@ public class Tree {
             }
             if (parent != null) {
                 parent.left = left.right;
+                parent.left.parent = parent;
             } else {
                 cur.right = left.right;
+                cur.right.parent = cur;
             }
             cur.value = left.value;
         }
@@ -177,6 +180,16 @@ public class Tree {
         }
 
         Node() {
+        }
+
+        public String toString() {
+            if (this.parent != null)
+                return String.format("%s => %s -> %s,%s", this.parent.value,
+                        this.value, this.left.value, this.right.value);
+            else
+                return String.format("%s -> %s,%s",
+                        this.value, this.left.value, this.right.value);
+
         }
     }
 }
