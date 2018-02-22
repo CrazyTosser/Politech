@@ -20,9 +20,6 @@ public class Tree {
         this.add(root, key);
     }
 
-    //define CMP_EQ(a, b) ((a) == (b))
-    //define CMP_LT(a, b) ((a) < (b))
-    //define CMP_GT(a, b) ((a) > (b))
     private void add(Node head, int val) {
         Node tmp = head, ins = null;
         while (tmp != null) {
@@ -149,13 +146,6 @@ class Node {
         this.parent = Optional.ofNullable(parent);
     }
 
-    public Node() {
-    }
-
-    public boolean isParent(Node p) {
-        return getParent().isPresent() && p == getParent().get();
-    }
-
     public boolean isLeft(Node p) {
         return getLeft().isPresent() && p == getLeft().get();
     }
@@ -197,7 +187,4 @@ class Node {
         this.right = Optional.ofNullable(right);
     }
 
-    public boolean isNotLeaf() {
-        return left.isPresent() && right.isPresent();
-    }
 }
