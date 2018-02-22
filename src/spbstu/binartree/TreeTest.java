@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class TreeTest {
-    private NewTree test;
+    private Tree test;
 
     @After
     public void tearDown() {
@@ -15,7 +15,7 @@ public class TreeTest {
 
     @Test
     public void add() {
-        test = new NewTree(5);
+        test = new Tree(5);
         test.add(1);
         test.add(9);
         assertEquals("1 5 9", test.toString());
@@ -27,13 +27,13 @@ public class TreeTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addDuplicate() {
-        test = new NewTree(1);
+        test = new Tree(1);
         test.add(1);
     }
 
     @Test
     public void removeFst() {
-        test = new NewTree(8); //root
+        test = new Tree(8); //root
         test.add(10); //right subtree
         test.add(new int[]{5, 2}); // left subtree
         assertEquals(test.printTree(),
@@ -51,25 +51,33 @@ public class TreeTest {
 
     @Test
     public void removeScd() {
-        test = new NewTree(8); //root
+        test = new Tree(8); //root
         test.add(10); //right subtree
-        test.add(new int[]{5, 2, 6, 7}); // left subtree
+        test.add(new int[]{5, 2, 7, 6}); // left subtree
+        assertEquals("2 5 6 7 8 10", test.toString());
         test.remove(5);
-        assertEquals("2 6 7 8 10", test.toString());
         assertEquals(test.printTree(), "ROOT:8\n" +
-                "Left for 8 --> 6\n" +
-                "Left for 6 --> 2\n" +
-                "Right for 6 --> 7\n" +
+                "Left for 8 --> 2\n" +
+                "Right for 2 --> 7\n" +
+                "Left for 7 --> 6\n" +
                 "Right for 8 --> 10\n");
     }
 
     @Test
     public void removeThd() {
-        test = new NewTree(8); //root
-        test.add(10); //right subtree
-        test.add(new int[]{5, 2, 7, 6}); // left subtree
-        assertEquals("2 5 6 7 8 10", test.toString());
-        test.remove(5);
+        test = new Tree(10); //root
+        test.add(new int[]{12, 11, 14}); //right subtree
+        test.add(new int[]{7, 9, 6, 3, 4}); // left subtree
+        assertEquals("3 4 6 7 9 10 11 12 14", test.toString());
+        test.remove(6);
         System.out.println(test.printTree());
+        assertEquals(test.printTree(), "ROOT:10\n" +
+                "Left for 10 --> 7\n" +
+                "Left for 7 --> 3\n" +
+                "Right for 3 --> 4\n" +
+                "Right for 7 --> 9\n" +
+                "Right for 10 --> 12\n" +
+                "Left for 12 --> 11\n" +
+                "Right for 12 --> 14\n");
     }
 }
