@@ -1,105 +1,109 @@
 package spbstu.binartree;
 
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class Tree {
+
     private Node root;
 
-    /**
-     * @param KeyRoot initial value for root node of new tree
-     */
-    public Tree(int KeyRoot) {
-        this.root = new Node(KeyRoot, null);
+    public Tree(int val) {
+        root = new Node(val, null);
     }
 
-    Tree() {
-        this.root = null;
+    public void add(int[] keys) {
+        for (int k : keys) {
+            this.add(k);
+        }
     }
 
-    /**
-     * @param cur current node for recursive search
-     * @param key search key
-     * @return node with the search key
-     */
-    private Node Search(Node cur, int key) {
+    public void add(int key) {
+        this.add(root, key);
+    }
+
+    private void add(Node head, int val) {
+        Node tmp = head, ins = null;
+        while (tmp != null) {
+            if (val > tmp.value) {
+                if (tmp.getRight().isPresent()) {
+                    tmp = tmp.getRight().get();
+                } else {
+                    tmp.setRight(new Node(val, tmp));
+                    return;
+                }
+            } else if (val < tmp.value) {
+                if (tmp.getLeft().isPresent()) {
+                    tmp = tmp.getLeft().get();
+                } else {
+                    tmp.setLeft(new Node(val, tmp));
+                    return;
+                }
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
+    }
+
+    private Node findMaxNode(Node target) {
+        while (target.getRight().isPresent())
+            target = target.getRight().get();
+        return target;
+    }
+
+    private Node search(Node cur, int key) {
         if (cur == null || key == cur.value)
             return cur;
-        if (key < cur.value)
-            return Search(cur.left, key);
-        else
-            return Search(cur.right, key);
+        if (key < cur.value && cur.getLeft().isPresent())
+            return search(cur.getLeft().get(), key);
+        else if (cur.getRight().isPresent())
+            return search(cur.getRight().get(), key);
+        return null;
     }
 
-    public void Add(int key) {
-        Node x = root, y = null;
-        while (x != null) {
-            if (key == x.value)
-                throw new IllegalArgumentException("Duplicate keys");
-            else {
-                y = x;
-                if (key < x.value)
-                    x = x.left;
-                else
-                    x = x.right;
-            }
-        }
-        Node res = new Node(key, y);
-        if (y == null)
-            root = res;
-        else {
-            if (y.value > key)
-                y.left = res;
-            else
-                y.right = res;
-        }
+    public void remove(int key) {
+        Node target = search(root, key);
+        this.remove(target);
     }
 
-    public void Add(int[] keys) {
-        for (int k : keys) {
-            this.Add(k);
-        }
-    }
-
-    /**
-     * @param key that must be removed
-     */
-    public void Remove(int key) {
-        Node cur = Search(root, key), parent = cur.parent;
-        if (cur == null) return;
-        //First variant. Cur have only left subnode
-        if (cur.right == null) {
-            if (parent == null) {
-                root = cur.left;
+    private void remove(Node target) {
+        if (target.getLeft().isPresent() && target.getRight().isPresent()) {
+            Node localMax = findMaxNode(target.getLeft().get());
+            target.value = localMax.value;
+            remove(localMax);
+        } else if (target.getLeft().isPresent()) {
+            if (target.getParent().isPresent() && target == target.getParent().get().getLeft().get()) {
+                target.getParent().get().setLeft(target.getLeft().get());
+                target.getParent().get().getLeft().get().setParent(target.getParent().get());
             } else {
-                if (parent.left == cur) {
-                    parent.left = cur.left;
-                } else {
-                    parent.right = cur.left;
-                }
+                target.getParent().get().setRight(target.getLeft().get());
+                target.getParent().get().getRight().get().setParent(target.getParent().get());
+            }
+        } else if (target.getRight().isPresent()) {
+            if (target.getParent().isPresent() && target == target.getParent().get().getRight().get()) {
+                target.getParent().get().setRight(target.getRight().get());
+                target.getParent().get().getRight().get().setParent(target.getParent().get());
+            } else {
+                target.getParent().get().setLeft(target.getRight().get());
+                target.getParent().get().getLeft().get().setParent(target.getParent().get());
             }
         } else {
-            Node left = cur.right;
-            parent = null;
-            while (left.left != null) {
-                parent = left;
-                left = left.left;
-            }
-            if (parent != null) {
-                parent.left = left.right;
+            if (target.getParent().isPresent() && target == target.getParent().get().getLeft().get()) {
+                target.getParent().get().setLeft(null);
             } else {
-                cur.right = left.right;
+                target.getParent().get().setRight(null);
             }
-            cur.value = left.value;
         }
     }
+
+    public String printTree() {
+        return printTree(root);
+    }
+
 
     private String print(Node t) {
         StringBuilder res = new StringBuilder();
-        if (t != null) {
-            res.append(print(t.left));
-            res.append(t.value).append(" ");
-            res.append(print(t.right));
-        }
+        if (t.getLeft().isPresent()) res.append(print(t.getLeft().get()));
+        res.append(t.value).append(" ");
+        if (t.getRight().isPresent()) res.append(print(t.getRight().get()));
         return res.toString();
     }
 
@@ -107,42 +111,80 @@ public class Tree {
         return print(root).trim();
     }
 
-    public Node getNode(int key) {
-        return getNode(key, 0);
-    }
-
-    /**
-     * @param key  key of searching node
-     * @param mode 0 - get node, 1 - get parent
-     *             2 - get left subnode, 3 - get right subnode
-     * @return searched node
-     */
-    public Node getNode(int key, int mode) {
-        Node res = Search(root, key);
-        if (res == null)
-            throw new NoSuchElementException("This key not found or have not parent ");
-        switch (mode) {
-            case 0:
-                return res;
-            case 1:
-                return res.parent;
-            case 2:
-                return res.left;
-            default:
-                return res.right;
+    private String printTree(Node node) {
+        StringBuilder str = new StringBuilder();
+        if (node != null) {
+            if (!node.getParent().isPresent()) {
+                str.append("ROOT:").append(node.value).append("\n");
+            } else {
+                if (node.getParent().get().isLeft(node)) {
+                    str.append("Left for ").append(node.getParent().get().value).append(" --> ")
+                            .append(node.value).append("\n");
+                }
+                if (node.getParent().get().isRight(node)) {
+                    str.append("Right for ").append(node.getParent().get().value).append(" --> ")
+                            .append(node.value).append("\n");
+                }
+            }
+            if (node.getLeft().isPresent())
+                str.append(printTree(node.getLeft().get()));
+            if (node.getRight().isPresent())
+                str.append(printTree(node.getRight().get()));
         }
+        return str.toString();
+    }
+}
+
+class Node {
+    public int value;
+    private Optional<Node> parent = Optional.empty();
+    private Optional<Node> left = Optional.empty();
+    private Optional<Node> right = Optional.empty();
+
+    public Node(int val, Node parent) {
+        value = val;
+        this.parent = Optional.ofNullable(parent);
     }
 
-    static class Node {
-        int value;
-        Node parent;
-        Node left, right;
-
-        Node(int value, Node p) {
-            this.value = value;
-            this.parent = p;
-            right = null;
-            left = null;
-        }
+    public boolean isLeft(Node p) {
+        return getLeft().isPresent() && p == getLeft().get();
     }
+
+    public boolean isRight(Node p) {
+        return getRight().isPresent() && p == getRight().get();
+    }
+
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        str.append(this.getParent().map(n -> "" + n.value).orElse("X")).append(" => ");
+        str.append(this.value).append(" -> ");
+        str.append(this.getLeft().map(n -> "" + n.value).orElse("X")).append(" , ");
+        str.append(this.getRight().map(n -> "" + n.value).orElse("X"));
+        return str.toString();
+    }
+
+    public Optional<Node> getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = Optional.ofNullable(parent);
+    }
+
+    public Optional<Node> getLeft() {
+        return left;
+    }
+
+    public void setLeft(Node left) {
+        this.left = Optional.ofNullable(left);
+    }
+
+    public Optional<Node> getRight() {
+        return right;
+    }
+
+    public void setRight(Node right) {
+        this.right = Optional.ofNullable(right);
+    }
+
 }

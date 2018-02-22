@@ -1,18 +1,12 @@
 package spbstu.binartree;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class TreeTest {
     private Tree test;
-
-    @Before
-    public void init() {
-        test = new Tree();
-    }
 
     @After
     public void tearDown() {
@@ -21,46 +15,69 @@ public class TreeTest {
 
     @Test
     public void add() {
-        test.Add(5);
-        test.Add(1);
-        test.Add(9);
+        test = new Tree(5);
+        test.add(1);
+        test.add(9);
         assertEquals("1 5 9", test.toString());
+        assertEquals(test.printTree(),
+                "ROOT:5\n" +
+                        "Left for 5 --> 1\n" +
+                        "Right for 5 --> 9\n");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addDuplicate() {
-        test.Add(1);
-        test.Add(1);
+        test = new Tree(1);
+        test.add(1);
     }
 
     @Test
     public void removeFst() {
-        test.Add(8); //root
-        test.Add(10); //right subtree
-        test.Add(new int[]{5, 2}); // left subtree
-        test.Remove(5);
+        test = new Tree(8); //root
+        test.add(10); //right subtree
+        test.add(new int[]{5, 2}); // left subtree
+        assertEquals(test.printTree(),
+                "ROOT:8\n" +
+                        "Left for 8 --> 5\n" +
+                        "Left for 5 --> 2\n" +
+                        "Right for 8 --> 10\n");
+        test.remove(5);
         assertEquals("2 8 10", test.toString());
-        assertEquals(test.getNode(8, 2).value, 2);
+        assertEquals(test.printTree(),
+                "ROOT:8\n" +
+                        "Left for 8 --> 2\n" +
+                        "Right for 8 --> 10\n");
     }
 
     @Test
     public void removeScd() {
-        test.Add(8); //root
-        test.Add(10); //right subtree
-        test.Add(new int[]{5, 2, 6, 7}); // left subtree
-        test.Remove(5);
-        assertEquals("2 6 7 8 10", test.toString());
-        assertEquals(test.getNode(8, 2).value, 6);
+        test = new Tree(8); //root
+        test.add(10); //right subtree
+        test.add(new int[]{5, 2, 7, 6}); // left subtree
+        assertEquals("2 5 6 7 8 10", test.toString());
+        test.remove(5);
+        assertEquals(test.printTree(), "ROOT:8\n" +
+                "Left for 8 --> 2\n" +
+                "Right for 2 --> 7\n" +
+                "Left for 7 --> 6\n" +
+                "Right for 8 --> 10\n");
     }
 
     @Test
     public void removeThd() {
-        test.Add(8); //root
-        test.Add(10); //right subtree
-        test.Add(new int[]{5, 2, 7, 6}); // left subtree
-        assertEquals("2 5 6 7 8 10", test.toString());
-        assertEquals(test.getNode(8, 2).value, 5);
-        test.Remove(5);
-        assertEquals(test.getNode(8, 2).value, 6);
+        test = new Tree(10); //root
+        test.add(new int[]{12, 11, 14}); //right subtree
+        test.add(new int[]{7, 9, 6, 3, 4}); // left subtree
+        assertEquals("3 4 6 7 9 10 11 12 14", test.toString());
+        test.remove(6);
+        System.out.println(test.printTree());
+        assertEquals(test.printTree(), "ROOT:10\n" +
+                "Left for 10 --> 7\n" +
+                "Left for 7 --> 3\n" +
+                "Right for 3 --> 4\n" +
+                "Right for 7 --> 9\n" +
+                "Right for 10 --> 12\n" +
+                "Left for 12 --> 11\n" +
+                "Right for 12 --> 14\n");
     }
 }
