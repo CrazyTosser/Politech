@@ -1,5 +1,7 @@
 package spbstu.binartree;
 
+import java.util.Optional;
+
 public class Tree {
 
     private Node root;
@@ -133,6 +135,58 @@ public class Tree {
                 str.append(printTree(node.getRight().get()));
         }
         return str.toString();
+    }
+
+    class Node {
+        public int value;
+        private Optional<Node> parent;
+        private Optional<Node> left = Optional.empty();
+        private Optional<Node> right = Optional.empty();
+
+        public Node(int val, Node parent) {
+            value = val;
+            this.parent = Optional.ofNullable(parent);
+        }
+
+        public boolean isLeft(Node p) {
+            return getLeft().isPresent() && p == getLeft().get();
+        }
+
+        public boolean isRight(Node p) {
+            return getRight().isPresent() && p == getRight().get();
+        }
+
+        public String toString() {
+            return this.getParent().map(n -> "" + n.value).orElse("X") + " => " +
+                    this.value + " -> " +
+                    this.getLeft().map(n -> "" + n.value).orElse("X") + " , " +
+                    this.getRight().map(n -> "" + n.value).orElse("X");
+        }
+
+        public Optional<Node> getParent() {
+            return parent;
+        }
+
+        public void setParent(Node parent) {
+            this.parent = Optional.ofNullable(parent);
+        }
+
+        public Optional<Node> getLeft() {
+            return left;
+        }
+
+        public void setLeft(Node left) {
+            this.left = Optional.ofNullable(left);
+        }
+
+        public Optional<Node> getRight() {
+            return right;
+        }
+
+        public void setRight(Node right) {
+            this.right = Optional.ofNullable(right);
+        }
+
     }
 }
 
