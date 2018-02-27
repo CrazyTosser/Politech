@@ -21,7 +21,7 @@ public class Tree {
     }
 
     private void add(Node head, int val) {
-        Node tmp = head, ins = null;
+        Node tmp = head;
         while (tmp != null) {
             if (val > tmp.value) {
                 if (tmp.getRight().isPresent()) {
