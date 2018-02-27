@@ -32,7 +32,7 @@ public class TreeTest {
     }
 
     @Test
-    public void removeFst() {
+    public void remove() {
         test = new Tree(8); //root
         test.add(10); //right subtree
         test.add(new int[]{5, 2}); // left subtree
@@ -47,10 +47,6 @@ public class TreeTest {
                 "ROOT:8\n" +
                         "Left for 8 --> 2\n" +
                         "Right for 8 --> 10\n");
-    }
-
-    @Test
-    public void removeScd() {
         test = new Tree(8); //root
         test.add(10); //right subtree
         test.add(new int[]{5, 2, 7, 6}); // left subtree
@@ -61,16 +57,11 @@ public class TreeTest {
                 "Right for 2 --> 7\n" +
                 "Left for 7 --> 6\n" +
                 "Right for 8 --> 10\n");
-    }
-
-    @Test
-    public void removeThd() {
         test = new Tree(10); //root
         test.add(new int[]{12, 11, 14}); //right subtree
         test.add(new int[]{7, 9, 6, 3, 4}); // left subtree
         assertEquals("3 4 6 7 9 10 11 12 14", test.toString());
         test.remove(6);
-        System.out.println(test.printTree());
         assertEquals(test.printTree(), "ROOT:10\n" +
                 "Left for 10 --> 7\n" +
                 "Left for 7 --> 3\n" +

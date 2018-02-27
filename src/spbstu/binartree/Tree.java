@@ -6,20 +6,35 @@ public class Tree {
 
     private Node root;
 
+    /**
+     * @param val initial value of root node
+     */
     public Tree(int val) {
         root = new Node(val, null);
     }
 
+    /**
+     * @param keys int array of values for adding to tree
+     */
     public void add(int[] keys) {
         for (int k : keys) {
             this.add(k);
         }
     }
 
+    /**
+     * @param key value for add to tree
+     */
     public void add(int key) {
         this.add(root, key);
     }
 
+    /**
+     * Recursive method.
+     *
+     * @param head current node
+     * @param val  adding value
+     */
     private void add(Node head, int val) {
         Node tmp = head;
         while (tmp != null) {
@@ -43,12 +58,22 @@ public class Tree {
         }
     }
 
+    /**
+     * @param target head node for new search
+     * @return object Node with max value in current subtree
+     */
     private Node findMaxNode(Node target) {
         while (target.getRight().isPresent())
             target = target.getRight().get();
         return target;
     }
 
+    /**
+     * Recursive search
+     * @param cur current node
+     * @param key searching value
+     * @return node with value = key
+     */
     private Node search(Node cur, int key) {
         if (cur == null || key == cur.value)
             return cur;
@@ -59,11 +84,17 @@ public class Tree {
         return null;
     }
 
+    /**
+     * @param key value that must be removed
+     */
     public void remove(int key) {
         Node target = search(root, key);
         this.remove(target);
     }
 
+    /**
+     * @param target node that must be removed
+     */
     private void remove(Node target) {
         if (target.getLeft().isPresent() && target.getRight().isPresent()) {
             Node localMax = findMaxNode(target.getLeft().get());
