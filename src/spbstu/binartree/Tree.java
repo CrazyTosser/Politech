@@ -1,7 +1,5 @@
 package spbstu.binartree;
 
-import java.util.NoSuchElementException;
-
 public class Tree {
 
     private Node root;
@@ -177,7 +175,7 @@ public class Tree {
     public Node getNode(int key, Searchmode mode) {
         Node res = search(root, key);
         if (res == null)
-            throw new NoSuchElementException("This key not found or have not parent ");
+            return new Node();
         switch (mode) {
             case Node:
                 return res;
@@ -190,11 +188,11 @@ public class Tree {
         }
     }
 
-    enum Searchmode {Node, Parent, Left, Right}
+    public static enum Searchmode {Node, Parent, Left, Right}
 
-    class Node {
-        boolean init = true;
-        public int value;
+    public class Node {
+        private boolean init = true;
+        private int value;
         private Node parent;
         private Node left = null;
         private Node right = null;
@@ -202,6 +200,14 @@ public class Tree {
         public Node(int val, Node parent) {
             value = val;
             this.parent = parent;
+        }
+
+        public boolean isInit() {
+            return init;
+        }
+
+        public int getValue() {
+            return value;
         }
 
         public Node() {
@@ -233,19 +239,6 @@ public class Tree {
                 str.append(right.value);
             return str.toString();
         }
-
-//        public void setParent(Node parent) {
-//            this.parent = parent;
-//        }
-//
-//        public void setLeft(Node left) {
-//            this.left = left;
-//        }
-//
-//        public void setRight(Node right) {
-//            this.right = right;
-//        }
-
     }
 }
 

@@ -3,8 +3,6 @@ package spbstu.binartree;
 import org.junit.After;
 import org.junit.Test;
 
-import java.util.NoSuchElementException;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -93,11 +91,11 @@ public class TreeTest {
                 "Left for 2 --> 1\n" +
                 "Right for 2 --> 4\n" +
                 "Right for 5 --> 6\n");
-        assertEquals(test.getNode(2).value, 2);
-        assertEquals(test.getNode(2, Tree.Searchmode.Parent).value, 5);
-        assertEquals(test.getNode(2, Tree.Searchmode.Right).value, 4);
-        assertEquals(test.getNode(2, Tree.Searchmode.Left).value, 1);
-        assertFalse(test.getNode(5, Tree.Searchmode.Parent).init);
+        assertEquals(test.getNode(2).getValue(), 2);
+        assertEquals(test.getNode(2, Tree.Searchmode.Parent).getValue(), 5);
+        assertEquals(test.getNode(2, Tree.Searchmode.Right).getValue(), 4);
+        assertEquals(test.getNode(2, Tree.Searchmode.Left).getValue(), 1);
+        assertFalse(test.getNode(5, Tree.Searchmode.Parent).isInit());
         assertEquals(test.getNode(5, Tree.Searchmode.Parent).toString(), "X => 0 -> X X");
         assertEquals(test.getNode(5).toString(), "X => 5 -> 2 6");
         assertEquals(test.getNode(6).toString(), "5 => 6 -> X X");
@@ -110,9 +108,9 @@ public class TreeTest {
         test.add(1);
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void searchUndefined() {
         test = new Tree(1);
-        test.getNode(2);
+        assertFalse(test.getNode(2).isInit());
     }
 }
