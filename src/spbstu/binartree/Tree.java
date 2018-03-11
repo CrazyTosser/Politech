@@ -1,7 +1,6 @@
 package spbstu.binartree;
 
 public class Tree {
-
     private Node root;
 
     /**
@@ -33,25 +32,23 @@ public class Tree {
             return;
         }
         Node tmp = head;
-        while (tmp != null) {
-            if (val > tmp.value) {
-                if (tmp.right != null) {
+        while (tmp != null)
+            if (val > tmp.value)
+                if (tmp.right != null)
                     tmp = tmp.right;
-                } else {
+                else {
                     tmp.right = new Node(val, tmp);
                     return;
                 }
-            } else if (val < tmp.value) {
-                if (tmp.left != null) {
+            else if (val < tmp.value)
+                if (tmp.left != null)
                     tmp = tmp.left;
-                } else {
+                else {
                     tmp.left = new Node(val, tmp);
                     return;
                 }
-            } else {
+            else
                 throw new IllegalArgumentException();
-            }
-        }
     }
 
     /**
@@ -112,13 +109,10 @@ public class Tree {
         } else if (target.right != null) {
             target.parent.right = target.right;
             target.parent.right.parent = target.parent;
-        } else {
-            if (target.parent.isLeft(target)) {
+        } else if (target.parent.isLeft(target))
                 target.parent.left = null;
-            } else {
+        else
                 target.parent.right = null;
-            }
-        }
     }
 
     private String print(Node t) {
@@ -138,17 +132,15 @@ public class Tree {
     private String printTree(Node node) {
         StringBuilder str = new StringBuilder();
         if (node != null) {
-            if (node.parent == null) {
+            if (node.parent == null)
                 str.append("ROOT:").append(node.value).append("\n");
-            } else {
-                if (node.parent.isLeft(node)) {
+            else {
+                if (node.parent.isLeft(node))
                     str.append("Left for ").append(node.parent.value)
                             .append(" --> ").append(node.value).append("\n");
-                }
-                if (node.parent.isRight(node)) {
+                if (node.parent.isRight(node))
                     str.append("Right for ").append(node.parent.value)
                             .append(" --> ").append(node.value).append("\n");
-                }
             }
             if (node.left != null)
                 str.append(printTree(node.left));
@@ -188,7 +180,7 @@ public class Tree {
         }
     }
 
-    public static enum Searchmode {Node, Parent, Left, Right}
+    public enum Searchmode {Node, Parent, Left, Right}
 
     public class Node {
         private boolean init = true;

@@ -28,10 +28,10 @@ public class TreeTest {
     }
 
     @Test
-    public void remove() {
-        test = new Tree(8); //root
-        test.add(10); //right subtree
-        test.add(new int[]{5, 2}); // left subtree
+    public void removeLeft() {
+        test = new Tree(8);
+        test.add(10);
+        test.add(new int[]{5, 2});
         assertEquals(test.printTree(),
                 "ROOT:8\n" +
                         "Left for 8 --> 5\n" +
@@ -43,9 +43,13 @@ public class TreeTest {
                 "ROOT:8\n" +
                         "Left for 8 --> 2\n" +
                         "Right for 8 --> 10\n");
-        test = new Tree(8); //root
-        test.add(10); //right subtree
-        test.add(new int[]{5, 3, 7, 6, 4, 2}); // left subtree
+    }
+
+    @Test
+    public void removeLeftSub() {
+        test = new Tree(8);
+        test.add(10);
+        test.add(new int[]{5, 3, 7, 6, 4, 2});
         assertEquals("2 3 4 5 6 7 8 10", test.toString());
         test.remove(5);
         assertEquals(test.printTree(), "ROOT:8\n" +
@@ -55,9 +59,13 @@ public class TreeTest {
                 "Right for 4 --> 7\n" +
                 "Left for 7 --> 6\n" +
                 "Right for 8 --> 10\n");
-        test = new Tree(10); //root
-        test.add(new int[]{12, 11, 14}); //right subtree
-        test.add(new int[]{7, 9, 6, 3, 4}); // left subtree
+    }
+
+    @Test
+    public void removeRightSub() {
+        test = new Tree(10);
+        test.add(new int[]{12, 11, 14});
+        test.add(new int[]{7, 9, 6, 3, 4});
         assertEquals("3 4 6 7 9 10 11 12 14", test.toString());
         test.remove(6);
         assertEquals(test.printTree(), "ROOT:10\n" +
@@ -68,9 +76,13 @@ public class TreeTest {
                 "Right for 10 --> 12\n" +
                 "Left for 12 --> 11\n" +
                 "Right for 12 --> 14\n");
-        test = new Tree(5); //root
-        test.add(new int[]{6, 7}); //right subtree
-        test.add(new int[]{3}); // left subtree
+    }
+
+    @Test
+    public void recreateTree() {
+        test = new Tree(5);
+        test.add(new int[]{6, 7});
+        test.add(new int[]{3});
         test.remove(6);
         assertEquals(test.getNode(7).toString(), "5 => 7 -> X X");
         test.remove(3);

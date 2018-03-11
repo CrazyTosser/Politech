@@ -4,7 +4,6 @@
 
 # IntelliJ project files
 .idea
-*.iml
 out
 # Compiled class file
 # Log file
