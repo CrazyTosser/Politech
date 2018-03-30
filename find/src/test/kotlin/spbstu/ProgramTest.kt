@@ -8,7 +8,6 @@ class ProgramTest {
     fun exec() {
         //println(System.getProperty("user.dir"))
         val prg = Program(false, "tst", "txt")
-        println(System.getProperty("user.dir"))
         assertEquals(prg.exec(), listOf("./test.txt"))
     }
 

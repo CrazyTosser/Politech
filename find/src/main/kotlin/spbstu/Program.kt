@@ -13,7 +13,8 @@ class Program(private val rec: Boolean, private val path: String, private val na
             else
                 if (it.name.contains(name) && !it.isDirectory) {
                     val tmp = it.absolutePath.indexOf(path) + 1 + path.length
-                    res.add("./" + it.absolutePath.subSequence(tmp until it.absolutePath.length))
+                    res.add(("./" + it.absolutePath.subSequence(tmp until it.absolutePath.length))
+                            .replace("//", "/"))
                 }
         }
         return res
