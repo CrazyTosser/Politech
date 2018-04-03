@@ -4,4 +4,4 @@
     * -d path to dir
     * -r - allow recursive search.
 
-Second project using Gradle. After building jar file will copied to directory `bin`.
+Second project using Gradle 4.6. After building jar file will copied to directory `bin`.
