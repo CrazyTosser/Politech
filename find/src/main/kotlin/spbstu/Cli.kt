@@ -8,7 +8,7 @@ import java.io.File
 
 class Cli(args: Collection<String>) {
     @Option(name = "-d", usage = "Working directory")
-    private var dir = System.getenv("gen")
+    private var dir = System.getenv("gen") ?: System.getProperty("gen") ?: System.getProperty("user.dir")
 
     @Option(name = "-r", usage = "Recursive search")
     private var rec = false
@@ -29,7 +29,7 @@ class Cli(args: Collection<String>) {
 
     private fun run() {
         fun getPath(wr:String) {
-            if(wr.substringAfterLast("/").contains(work))
+            if (wr.substringAfterLast("/").contains(work))//&& wr != dir)
                 println("./${wr.removePrefix(dir)}".replace("//", "/"))
         }
         if(rec)

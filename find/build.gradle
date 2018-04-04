@@ -10,8 +10,8 @@ buildscript {
     }
 }
 
-group 'com.kazandzhi.mihail'
-version '1'
+group "com.kazandzhi.mihail"
+version "1.0"
 
 apply plugin: 'kotlin'
 apply plugin: 'application'
