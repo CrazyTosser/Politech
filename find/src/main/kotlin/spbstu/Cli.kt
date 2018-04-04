@@ -1,46 +1,40 @@
 package spbstu
 
-import org.apache.commons.cli.*
+import org.kohsuke.args4j.Argument
+import org.kohsuke.args4j.CmdLineException
+import org.kohsuke.args4j.CmdLineParser
+import org.kohsuke.args4j.Option
 import java.io.File
 
-class Cli(private var args: MutableList<String>) {
-    private var options = Options()
-    private lateinit var program: Program
-    fun parse(): List<String> {
-        val prs: CommandLineParser = DefaultParser()
-        try {
-            val cmd: CommandLine = prs.parse(options, args.toTypedArray())
-            val rec = if (cmd.hasOption("r")) {
-                args.removeIf { it == "-r" }
-                true
-            } else {
-                false
-            }
+class Cli(args: Collection<String>) {
+    @Option(name = "-d", usage = "Working directory")
+    private var dir = System.getenv("gen")
 
-            val path =
-                    if (cmd.hasOption("d")) {
-                        cmd.getOptionValue("d")
-                        val ind = args.indexOf("-d")
-                        args.removeAt(ind)
-                        args.removeAt(ind)
-                    } else System.getProperty("user.dir")
-            val targ = args.joinToString().trim()
-            val fl = File(path)
-            if (!fl.isDirectory)
-                throw IllegalStateException()
-            program = Program(rec, path, targ)
-        } catch (ex: IllegalStateException) {
-            println("Недопустимый для директории поиска")
-            val frm = HelpFormatter()
-            frm.printHelp("Main", options)
-            System.exit(0)
-        }
-        return program.exec()
-    }
+    @Option(name = "-r", usage = "Recursive search")
+    private var rec = false
+
+    @Argument
+    private var work = ""
 
     init {
-        options.addOption(Option("r", "recursive", false, "recursive search"))
-        options.addOption(Option("d", "directory", true, "directory for search"))
+        val parser = CmdLineParser(this)
+        try{
+            parser.parseArgument(args)
+            this.run()
+        }catch (ex: CmdLineException){
+            System.err.print(ex.message)
+            parser.printUsage(System.out)
+        }
     }
 
+    private fun run() {
+        fun getPath(wr:String) {
+            if(wr.substringAfterLast("/").contains(work))
+                println("./${wr.removePrefix(dir)}".replace("//", "/"))
+        }
+        if(rec)
+            File(dir).walkTopDown().forEach { getPath(it.absolutePath)}
+        else
+            File(dir).list().forEach { getPath(it) }
+    }
 }
