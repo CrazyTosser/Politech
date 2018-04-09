@@ -36,14 +36,14 @@ public class CliTest {
 
     @Test
     public void termRec() {
-        Assert.assertEquals(Arrays.asList("." + File.separator + "test", "." + File.separator + "exmp" + File.separator + "test",
+        Assert.assertEquals(Arrays.asList("." + File.separator + "test", "." + File.separator + "exmp", "." + File.separator + "exmp" + File.separator + "test",
                 "." + File.separator + "exmp" + File.separator + "test2", "." + File.separator + "test2"),
-                new Cli(Arrays.asList("-d", path + File.separator + "exmp", "-r", "")).getRes());
+                new Cli(Arrays.asList("-d", path, "-r", "")).getRes());
     }
 
     @Test
     public void termDef() {
-        Assert.assertEquals(Arrays.asList("." + File.separator + "exmp", "." + File.separator + "test",
+        Assert.assertEquals(Arrays.asList("." + File.separator + "test", "." + File.separator + "exmp",
                 "." + File.separator + "test2"),
                 new Cli(Collections.singletonList("")).getRes());
     }
