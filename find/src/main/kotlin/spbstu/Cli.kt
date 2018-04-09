@@ -14,7 +14,7 @@ class Cli(args: Collection<String>) {
     private var rec = false
 
     @Argument
-    private var work = ""
+    private var findStr = ""
 
     var res: List<String> = emptyList()
 
@@ -31,10 +31,9 @@ class Cli(args: Collection<String>) {
 
     private fun run(): List<String> {
         this.res = mutableListOf()
-        val treeWalk = File(dir).walk().maxDepth(if (rec) Int.MAX_VALUE else 1)
-        treeWalk.asSequence().forEach {
+        File(dir).walk().maxDepth(if (rec) Int.MAX_VALUE else 1).forEach {
             val tmp = it.relativeTo(File(dir)).toString()
-            if (tmp.isNotEmpty())
+            if (tmp.isNotEmpty() && it.name.contains(findStr))
                 (res as MutableList<String>).add("." + File.separator + tmp)
         }
         return res
