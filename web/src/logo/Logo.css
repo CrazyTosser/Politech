@@ -1,0 +1,11 @@
+.Logo {
+    position: relative;
+    display: inline-block;
+}
+
+.Logo-kotlin {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
